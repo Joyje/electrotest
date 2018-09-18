@@ -1,9 +1,4 @@
 #include <stdio.h>
-// Ska räkna ut P = U * I (spänning genom ström) - Hur gör jag ohm till ampere?
-// Volt = Spänning
-// Resistance = ohm
-// Ström = ampere, A
-#include <math.h>
 #include "libpower.h"
 
 int main(int argc, char *argv[]) {
