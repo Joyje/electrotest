@@ -11,14 +11,15 @@ OBJ = component.o
 #Lib
 TARGET = libcomponent.so
 #Installation directory
-DESTDIR = /usr/local/src/linuxkurs/electrotest/src/component
+DESTDIR = .
 #Test
 TESTFLAGS = -Wall
 TESTDIR = test/
 TESTSOURCES = componentTest.c
 TESTOBJ = componentTest.o
 TESTTARGET = componentTest
-
+LIB_DIR = ../
+LD = -L$(LIB_DIR) $(LIB:../lib%.so=-l%) -Wl,-rpath=$(LIB_DIR)
 
 all: $(TARGET)
 
@@ -39,8 +40,8 @@ test: $(TESTDIR)$(TESTTARGET)
 $(TESTDIR)$(TESTOBJ): $(TESTDIR)$(TESTSOURCES)
 	$(CC) -c -o $@ $< $(TESTFLAGS)
 
-$(TESTDIR)$(TESTTARGET): $(TESTDIR)$(TESTOBJ)
-	$(CC) -o $@ $^ $(TESTFLAGS)
+$(TESTDIR)$(TESTTARGET): $(TESTDIR)$(TESTOBJ) $(LIB)
+	$(CC) -o $@ $^ $(TESTFLAGS) $(LD)
 
 check:
 	$(TESTDIR)$(TESTTARGET)
