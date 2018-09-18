@@ -19,7 +19,7 @@ TESTSOURCES = componentTest.c
 TESTOBJ = componentTest.o
 TESTTARGET = componentTest
 LIB_DIR = $(CURPATH)
-LD = -L$(LIB_DIR) $(LIB:lib%.so=-l%) -Wl,-rpath=$(LIB_DIR)
+LD = -L$(CURDIR) -l$(CURDIR)/libcomponent.so
 
 all: $(TARGET)
 
