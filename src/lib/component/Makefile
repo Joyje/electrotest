@@ -14,12 +14,12 @@ TARGET = libcomponent.so
 DESTDIR = .
 #Test
 TESTFLAGS = -Wall
-TESTDIR = test/
+TESTDIR = $(CURPATH)
 TESTSOURCES = componentTest.c
 TESTOBJ = componentTest.o
 TESTTARGET = componentTest
-LIB_DIR = ../
-LD = -L$(LIB_DIR) $(LIB:../lib%.so=-l%) -Wl,-rpath=$(LIB_DIR)
+LIB_DIR = $(CURPATH)
+LD = -L$(LIB_DIR) $(LIB:lib%.so=-l%) -Wl,-rpath=$(LIB_DIR)
 
 all: $(TARGET)
 
@@ -38,9 +38,9 @@ $(TARGET): $(OBJ)
 test: $(TESTDIR)$(TESTTARGET)
 
 $(TESTDIR)$(TESTOBJ): $(TESTDIR)$(TESTSOURCES)
-	$(CC) -c -o $@ $< $(TESTFLAGS)
+	$(CC) -c -o $@ $< $(TESTFLAGS) $(LD)
 
-$(TESTDIR)$(TESTTARGET): $(TESTDIR)$(TESTOBJ) $(LIB)
+$(TESTDIR)$(TESTTARGET): $(TESTDIR)$(TESTOBJ)
 	$(CC) -o $@ $^ $(TESTFLAGS) $(LD)
 
 check:
