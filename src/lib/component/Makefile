@@ -5,9 +5,9 @@ CFLAGS = -fPIC -Werror -Wextra -O2
 #Linking flags
 LDFLAGS = -shared
 #Sources
-SOURCES = component.c
+SOURCES = libcomponent.c
 #Used to make sure we recompile c files when h-file is changed
-OBJ = component.o
+OBJ = libcomponent.o
 #Lib
 TARGET = libcomponent.so
 #Installation directory
@@ -24,7 +24,7 @@ LD = -L$(LIB_DIR) $(LIB:../lib%.so=-l%) -Wl,-rpath=$(LIB_DIR)
 all: $(TARGET)
 
 #Object file depends on c files which depends on h-files
-comonent.o: component.c component.h
+libcomonent.o: libcomponent.c component.h
 
 #To generate the o-file make needs to compile the c-files using
 #compiler stated in CC makro. $@ says that the compilation output
