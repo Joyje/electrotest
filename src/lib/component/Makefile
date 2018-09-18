@@ -12,6 +12,13 @@ OBJ = component.o
 TARGET = libcomponent.so
 #Installation directory
 DESTDIR = /usr/local/src/linuxkurs/electrotest/src/component
+#Test
+TESTFLAGS = -Wall
+TESTDIR = test/
+TESTSOURCES = componentTest.c
+TESTOBJ = componentTest.o
+TESTTARGET = componentTest
+
 
 all: $(TARGET)
 
@@ -27,6 +34,17 @@ comonent.o: component.c component.h
 $(TARGET): $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^ $(CFLAGS)
 
+test: $(TESTDIR)$(TESTTARGET)
+
+$(TESTDIR)$(TESTOBJ): $(TESTDIR)$(TESTSOURCES)
+	$(CC) -c -o $@ $< $(TESTFLAGS)
+
+$(TESTDIR)$(TESTTARGET): $(TESTDIR)$(TESTOBJ)
+	$(CC) -o $@ $^ $(TESTFLAGS)
+
+check:
+	$(TESTDIR)$(TESTTARGET)
+
 install: $(TARGET)
 	cp $< $(DESTDIR)$(TARGET)
 
@@ -35,3 +53,4 @@ uninstall:
 
 clean:
 	$(RM) $(TARGET) *.o *~
+	$(RM) $(TESTDIR)$(TESTTARGET) $(TESTDIR)*.o $(TESTDIR)*~
