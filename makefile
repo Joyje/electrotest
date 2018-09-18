@@ -55,4 +55,4 @@ install:
 
 uninstall:
 	$(RM) /usr/local/bin/$(MAIN)
-	$(RM) /usr/local/lib/$(LIB:$(LIB_DIR)%.so=%.so)
+	$(foreach i,$(LIBFILES),$(RM) /usr/local/lib/$(i))
