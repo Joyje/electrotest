@@ -1,2 +1,2 @@
 test:
-	gcc -o powerTest powerTest.c -lpower
+	gcc -o powerTest powerTest.c -lpower -lm
