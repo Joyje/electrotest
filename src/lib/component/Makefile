@@ -19,7 +19,7 @@ TESTSOURCES = componentTest.c
 TESTOBJ = componentTest.o
 TESTTARGET = componentTest
 LIB_DIR = $(CURPATH)
-LD = -L$(CURDIR) -l$(CURDIR)/libcomponent.so
+LD = -L$(CURDIR) -lcomponent -Wl,-rpath=$(CURDIR)
 
 all: $(TARGET)
 
@@ -44,7 +44,7 @@ $(TESTDIR)$(TESTTARGET): $(TESTDIR)$(TESTOBJ)
 	$(CC) -o $@ $^ $(TESTFLAGS) $(LD)
 
 check:
-	$(TESTDIR)$(TESTTARGET)
+	./$(TESTTARGET)
 
 install: $(TARGET)
 	cp $< $(DESTDIR)$(TARGET)
