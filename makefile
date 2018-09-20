@@ -19,7 +19,7 @@ LIBOBJ = $(filter $(foreach i,$(LIBOBJFILES),%$(i)),$(OBJ))
 DEPS = $(OBJ:%.o=%.d) 
 LIB = $(LIBOBJ:$(OBJ_DIR)$(LIB_DIR)%.o=$(LIB_DIR)%.so)
 
-LD = $(foreach i,$(dir $(LIB)),-L$(i)) $(LIBFILES:lib%.so=-l%) $(foreach i,$(dir $(LIB)),-Wl,-rpath=$(i))
+LD = $(foreach i,$(dir $(LIB)),-L$(i)) $(LIBFILES:lib%.so=-l%) $(foreach i,$(dir $(LIB)),-Wl,-rpath=$(i)) -lm
 MAIN = electrotest
 
 all:	$(MAIN)
