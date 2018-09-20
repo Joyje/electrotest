@@ -8,7 +8,7 @@ int main(void){
 	char i[8];
 
 	char conn;
-	fprintf(stdout, "Ange koppliing [S | P]:");
+	fprintf(stdout, "Ange koppling [S | P]:");
 	conn = getchar();
 	getchar();
 
