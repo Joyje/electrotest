@@ -1,12 +1,30 @@
 #include "component.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-void calculateAllPossibleValues(float* e12Array,
-                                int numberOfE12Values,
-                                float* allPossibleValues) {
-    allPossibleValues[0] = 1;
-    allPossibleValues[1] = 100;
-    allPossibleValues[2] = 200;
+void calculateBestFit(float wantedSum,
+                      float* e12Array,
+                      int numberOfE12Values,
+                      float* resultArray) {
+
+    float rest = wantedSum;
+    float tmpRest = wantedSum;
+    int e12ValueIndexMax = numberOfE12Values - 1;
+    for(int i = e12ValueIndexMax; i>=0; i--) {
+        for (int j = e12ValueIndexMax; j>=0; j--) {
+            for (int k = e12ValueIndexMax; k>=0; k--) {
+               tmpRest = wantedSum - e12Array[i] - e12Array[j] - e12Array[k];
+               if (fabsf(tmpRest) < fabsf(rest)) {
+                   rest = tmpRest;
+                   printf("absRest=%f, rest=%f e121=%f, e122=%f, e123=%f\n", fabsf(tmpRest), tmpRest, e12Array[i], e12Array[j], e12Array[k]);
+                   resultArray[0] = e12Array[i];
+                   resultArray[1] = e12Array[j];
+                   resultArray[2] = e12Array[k];
+               }
+            }
+        }
+    }
 }
 
 /**
@@ -24,16 +42,8 @@ int e_resistance(float orig_resistance,
     int sizeOfAllocatedResistorArray = sizeof(res_array) / sizeof(res_array[0]);
     int numberOfUsedResistors = 0; // Initiated to 0 and only changed if needed
 
-    float* allPossibleValues = NULL;
-    allPossibleValues = (float *)malloc(sizeof(float)*(2^e12ArrayLength));
-
     //Calculate all possible values and put them in a sorted array
-    calculateAllPossibleValues(e12Values, e12ArrayLength, allPossibleValues);
-    res_array[0] = allPossibleValues[0];
-    res_array[1] = allPossibleValues[1];
-    res_array[2] = allPossibleValues[2];
-
-    free(allPossibleValues);
+    calculateBestFit(orig_resistance, e12Values, e12ArrayLength, res_array);
 
     for (int i = 0; i <= sizeOfAllocatedResistorArray; i++) {
         if (res_array[i] > 0) {

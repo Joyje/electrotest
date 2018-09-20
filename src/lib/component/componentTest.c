@@ -6,7 +6,7 @@ int calculate0Resistance(float* resistors) {
 
     int result = 0;
 
-    result = e_resistance(0.0, resistors);
+    result = e_resistance(5.0, resistors);
     printf("Number of resistors %d. Values %f, %f, %f\n", result, resistors[0],
            resistors[1], resistors[2]);
 
