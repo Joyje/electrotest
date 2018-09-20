@@ -6,7 +6,6 @@ float calc_resistance(int count, char conn, float *array){
 		fprintf(stderr, "Inga resistorer. Ange minst en resistor.\n");
 		return -1;
 	} else if (conn == 'P') {
-		fprintf(stdout, "Du har angett parallellkoppling\n");
 		for (int i = 0; i < count; i++) {
 			if (array[i] < 0) {
 				fprintf(stderr, "Ogiltigt värde på komponent %d. %f\n", i+1, array[i]);
@@ -16,7 +15,6 @@ float calc_resistance(int count, char conn, float *array){
 		}
 		return 1/resistance;
 	} else if (conn == 'S'){
-		fprintf(stdout, "Du har angett seriekoppling\n");
 		for (int i = 0; i < count; i++){
 			if (array[i] < 0) {
 				fprintf(stderr, "Ogiltigt värde på komponent %d. %f\n", i+1, array[i]);
