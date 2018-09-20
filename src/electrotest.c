@@ -9,7 +9,7 @@ int main(void){
 
 	char conn;
 	fprintf(stdout, "Ange koppling [S | P]:");
-	conn = getchar();
+	conn = toupper(getchar());
 	getchar();
 
 	int count;
@@ -26,6 +26,6 @@ int main(void){
 
 	float ohm = 0;
 	ohm = calc_resistance(count, conn, array);
-	printf("Ersättningsresistans:\n%f ohm.\n", ohm);
+	printf("Ersättningsresistans:\n%.1f ohm.\n", ohm);
 	return 0;
 }
