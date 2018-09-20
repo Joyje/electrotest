@@ -17,7 +17,6 @@ void calculateBestFit(float wantedSum,
                tmpRest = wantedSum - e12Array[i] - e12Array[j] - e12Array[k];
                if (fabsf(tmpRest) < fabsf(rest)) {
                    rest = tmpRest;
-                   printf("absRest=%f, rest=%f e121=%f, e122=%f, e123=%f\n", fabsf(tmpRest), tmpRest, e12Array[i], e12Array[j], e12Array[k]);
                    resultArray[0] = e12Array[i];
                    resultArray[1] = e12Array[j];
                    resultArray[2] = e12Array[k];
