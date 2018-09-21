@@ -5,6 +5,7 @@
 
 #include "electrotest.h"
 #include "lib/power/libpower.h"
+#include "lib/component/libcomponent.h"
 
 int main(void) {
 
@@ -49,6 +50,26 @@ int main(void) {
 	// Get the effect using the resistance:
 	float watt = calc_power_r(volt, ohm);
 	fprintf(stdout, "Effekt:\n%.2fW\n", watt);
+
+        //Calculate E12 resistors
+        float e12Resistors[3] = {0, 0, 0};
+        int numberofResistors = e_resistance(ohm, e12Resistors);
+
+        if (numberofResistors < 0) {
+            fprintf(stdout, "Something went wrong");
+            return 0;   // Early return
+        }
+
+        fprintf(stdout, "Ersättningsreistanser i E12-serien kopplade i serie:\n");
+        for (int i = 0; i < 3; i++) {
+            if (e12Resistors[i] < 10) {
+                fprintf(stdout, "%.1f\n", e12Resistors[i]);
+            }
+            else {
+                fprintf(stdout, "%.0f\n", e12Resistors[i]);
+
+            }
+        }
 
 	return 0;
 }
