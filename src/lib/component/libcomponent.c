@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <memory.h>
+
+#define NUMBER_OF_RESISTORS 3 // Note! If this is changed you need to also change in calculateBestFit
 
 /**
  * Calculate resistors that can be used in serie to achieve a total resistance
@@ -21,7 +24,7 @@
 void calculateBestFit(float wantedSum,
                       float *e12Array,
                       int numberOfE12Values,
-                      float* resultArray) {
+                      float *resultArray) {
 
     float rest = wantedSum; //Used in iteration to save the currently lowest remaining value after having substracting
                             //the wanted sum with three resistor values
@@ -50,6 +53,7 @@ void calculateBestFit(float wantedSum,
     }
 }
 
+
 /**
  * Fills the array of possible resistor values based on the normalised values
  * @param e12NormValues[in] Array with the normalised values
@@ -75,9 +79,35 @@ void fillAllResistanceValues(float *e12NormValues,
     }
 }
 
+
+/**
+ * Validates if the orig_resistance is within expected range
+ * @param orig_resistance[in} Value to validate
+ * @param e12MaxFactorArray[in] Array with all possible values
+ * @param e12UpTo1000ArrayLength[in] Length of array with all possible values
+ * @return -1 if origResistance is NOT within expected values otherwise 1
+ */
+int checkValidOriginResistance(float orig_resistance,
+                               float *e12MaxFactorArray,
+                               int e12UpTo1000ArrayLength) {
+
+    int invalidInput = -1;
+
+    if (orig_resistance < 0) {
+        return invalidInput; //Too small
+    }
+
+    if (orig_resistance > (e12MaxFactorArray[e12UpTo1000ArrayLength-1] * NUMBER_OF_RESISTORS)) {
+        return invalidInput; //Too large
+    }
+
+    return 1;
+}
+
+
 /**
  * Calculates which three serial connected resistances that can be used for the "orig_resistance".
- * @param[in] orig_resistance The resistance that needs resistors
+ * @param[in] orig_resistance The resistance that needs resistor values
  * @param[out] res_array The array of maximum three resistors. 0 should be used if not needed
  * @return Number of resistors needed
  */
@@ -86,10 +116,13 @@ int e_resistance(float orig_resistance,
 
     float e12NormValues[] = {1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2};
     int e12NormArrayLength = sizeof(e12NormValues) / sizeof(e12NormValues[0]);
-    int sizeOfAllocatedResistorArray = sizeof(res_array) / sizeof(res_array[0]);
     int numberOfUsedResistors = 0; // Initiated to 0 and only changed if needed
     float *e12MaxFactorArray = NULL;
     int maxE12Factor = 3;
+    int validInput = 0;     //Validates if orig_resistance is valid or not
+
+    //First memset res_array to 0 and only change if valid input
+    memset(res_array, 0, sizeof(res_array));
 
     //Programme supports e12NormValues, 10*e12NormValues, 100 * e12NormValues. +1 to be able to have 0 in array as well
     int e12UpTo1000ArrayLength = e12NormArrayLength * maxE12Factor + 1;
@@ -100,17 +133,25 @@ int e_resistance(float orig_resistance,
     //Fill array with values
     fillAllResistanceValues(e12NormValues, e12NormArrayLength, maxE12Factor, e12MaxFactorArray);
 
+    //Chaeck valid inparameter orig_Resistance
+    validInput = checkValidOriginResistance(orig_resistance, e12MaxFactorArray, e12UpTo1000ArrayLength);
+
+    //If not valid input return early wth zero resistors
+    if (validInput < 0) {
+        return -1;
+    }
+
     //Calculate suggested resistors
     calculateBestFit(orig_resistance, e12MaxFactorArray, e12UpTo1000ArrayLength, res_array);
 
-    free(e12MaxFactorArray);
-
     //If resistor value is 0 no resistor is needed
-    for (int i = 0; i <= sizeOfAllocatedResistorArray; i++) {
+    for (int i = 0; i < NUMBER_OF_RESISTORS; i++) {
         if (res_array[i] > 0) {
             numberOfUsedResistors++;
         }
     }
+
+    free(e12MaxFactorArray);
 
     return numberOfUsedResistors;
 }
