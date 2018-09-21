@@ -33,17 +33,17 @@ void calculateBestFit(float wantedSum,
 void fillAllResistanceValues(float *e12NormValues,
                              int e12NormArrayLength,
                              float *e12UpTo1000Array,
-                             int totalArrayLength) {
+                             int maxE12Factor) {
     int tmpFactor = 1;
+    int index = 1;
 
-    for (int i = 0; i < totalArrayLength; i++) {
+    e12UpTo1000Array[0] = 0;
+    for (int i = 0; i < maxE12Factor; i++) {
         for (int j = 0; j < e12NormArrayLength; j++) {
-            e12UpTo1000Array[i] = e12NormValues[j] * tmpFactor;
-            printf("%f\n", e12UpTo1000Array[i]);
+            e12UpTo1000Array[index] = e12NormValues[j] * tmpFactor;
+            index++;
         }
-        if ((i > 0) && (i % e12NormArrayLength == 0)) {
-            tmpFactor = tmpFactor * 10;
-        }
+        tmpFactor = tmpFactor * 10;
     }
 
 
@@ -56,26 +56,30 @@ void fillAllResistanceValues(float *e12NormValues,
  * @return Number of resistors needed
  */
 int e_resistance(float orig_resistance,
-                 float* res_array) {
+                 float *res_array) {
 
-    float e12NormValues[] = {0, 1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2};
-    float remainingResistance = orig_resistance;
+    float e12NormValues[] = {1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2};
     int e12NormArrayLength = sizeof(e12NormValues) / sizeof(e12NormValues[0]);
     int sizeOfAllocatedResistorArray = sizeof(res_array) / sizeof(res_array[0]);
     int numberOfUsedResistors = 0; // Initiated to 0 and only changed if needed
-    float *e12UpTo1000Array = NULL;
-    int e12UpTo1000ArrayLength = e12NormArrayLength * 3;
+    float *e12MaxFactorArray = NULL;
+    int maxE12Factor = 3;
 
-    //Allocate memory for array with all values
-    e12UpTo1000Array = (float *) malloc(e12UpTo1000ArrayLength * sizeof(float));
+    //Programme supports e12NormValues, 10*e12NormValues, 100 * e12NormValues. +1 to be able to have 0 in array as well
+    int e12UpTo1000ArrayLength = e12NormArrayLength * maxE12Factor + 1;
+
+    //Allocate memory for array with all possible E12 values
+    e12MaxFactorArray = (float *) malloc(e12UpTo1000ArrayLength * sizeof(float));
 
     //Fill array with values
-    fillAllResistanceValues(e12NormValues, e12NormArrayLength, e12UpTo1000Array, e12UpTo1000ArrayLength);
+    fillAllResistanceValues(e12NormValues, e12NormArrayLength, e12MaxFactorArray, maxE12Factor);
 
-    calculateBestFit(orig_resistance, e12UpTo1000Array, e12UpTo1000ArrayLength, res_array);
+    //Calculate suggested resistors
+    calculateBestFit(orig_resistance, e12MaxFactorArray, e12UpTo1000ArrayLength, res_array);
 
-    free(e12UpTo1000Array);
+    free(e12MaxFactorArray);
 
+    //If resistor value is 0 no resistor is needed
     for (int i = 0; i <= sizeOfAllocatedResistorArray; i++) {
         if (res_array[i] > 0) {
             numberOfUsedResistors++;
