@@ -24,7 +24,7 @@ LD = -L$(CURDIR) -lcomponent -Wl,-rpath=$(CURDIR) -lm
 all: $(TARGET)
 
 #Object file depends on c files which depends on h-files
-libcomonent.o: libcomponent.c component.h
+libcomonent.o: libcomponent.c libcomponent.h
 
 #To generate the o-file make needs to compile the c-files using
 #compiler stated in CC makro. $@ says that the compilation output

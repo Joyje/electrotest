@@ -1,6 +1,13 @@
+/**
+ * @file componentTest.h
+ * @brief Unit tests for libcomponent
+ *
+ * @author Charlotte Hagborg
+ * @date 21 Sep 2018
+ */
 
 #include <stdio.h>
-#include "component.h"
+#include "libcomponent.h"
 
 int calculate0Resistance(float* resistors) {
 

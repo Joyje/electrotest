@@ -10,7 +10,7 @@ Filer/kataloger som bör finnas i denna katalog och dess underkataloger:
 lib.txt
 
 component/
-component/component.h
+component/libcomponent.h
 component/libcomponent.c
 
 power/

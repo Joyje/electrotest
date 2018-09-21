@@ -1,16 +1,36 @@
-#include "component.h"
+/**
+ * @file libcomponent.c
+ * @brief Source file for component choices
+ *
+ * @author Charlotte Hagborg
+ * @date 21 Sep 2018
+ */
+
+#include "libcomponent.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
+/**
+ * Calculate resistors that can be used in serie to achieve a total resistance
+ * @param wantedSum[in] The resistance in ohm that we should achieve
+ * @param e12Array[in] An array with the all possible choices of resistors
+ * @param numberOfE12Values[in] Number of resisstors to choose between
+ * @param resultArray[out] An array of the choosen resistors
+ */
 void calculateBestFit(float wantedSum,
                       float *e12Array,
                       int numberOfE12Values,
                       float* resultArray) {
 
-    float rest = wantedSum;
-    float tmpRest = wantedSum;
-    int e12ValueIndexMax = numberOfE12Values - 1;
+    float rest = wantedSum; //Used in iteration to save the currently lowest remaining value after having substracting
+                            //the wanted sum with three resistor values
+    float tmpRest = wantedSum;  //The rest reamaining after having selecting three resistor values
+
+    int e12ValueIndexMax = numberOfE12Values - 1;   //The max index value in E12 array is one less than length of array
+
+    //Loop over all possible values staring with higest value assuming that it is better to use less resistors with
+    //higher resistance.
     for(int i = e12ValueIndexMax; i>=0; i--) {
         for (int j = e12ValueIndexMax; j>=0; j--) {
             for (int k = e12ValueIndexMax; k>=0; k--) {
@@ -30,23 +50,29 @@ void calculateBestFit(float wantedSum,
     }
 }
 
+/**
+ * Fills the array of possible resistor values based on the normalised values
+ * @param e12NormValues[in] Array with the normalised values
+ * @param e12NormArrayLength[in] Length of array with normalised values
+ * @param maxE12Factor[in] How many multiples (*10) of the e12NormArray that is supported
+ * @param fullE12Array[out] All possible resistor values base on E12 table and the maxE12Factor
+ */
 void fillAllResistanceValues(float *e12NormValues,
                              int e12NormArrayLength,
-                             float *e12UpTo1000Array,
-                             int maxE12Factor) {
-    int tmpFactor = 1;
-    int index = 1;
+                             int maxE12Factor,
+                             float *fullE12Array) {
 
-    e12UpTo1000Array[0] = 0;
+    int tmpFactor = 1;  //Factor to use to multiply the E12 normailised  array values with, starting at 1
+    int index = 1;  //Index in fullE12Array
+
+    fullE12Array[0] = 0; //Include 0 in array to use that for checking if resistors are used at all or not
     for (int i = 0; i < maxE12Factor; i++) {
         for (int j = 0; j < e12NormArrayLength; j++) {
-            e12UpTo1000Array[index] = e12NormValues[j] * tmpFactor;
+            fullE12Array[index] = e12NormValues[j] * tmpFactor;
             index++;
         }
         tmpFactor = tmpFactor * 10;
     }
-
-
 }
 
 /**
@@ -72,7 +98,7 @@ int e_resistance(float orig_resistance,
     e12MaxFactorArray = (float *) malloc(e12UpTo1000ArrayLength * sizeof(float));
 
     //Fill array with values
-    fillAllResistanceValues(e12NormValues, e12NormArrayLength, e12MaxFactorArray, maxE12Factor);
+    fillAllResistanceValues(e12NormValues, e12NormArrayLength, maxE12Factor, e12MaxFactorArray);
 
     //Calculate suggested resistors
     calculateBestFit(orig_resistance, e12MaxFactorArray, e12UpTo1000ArrayLength, res_array);
