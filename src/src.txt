@@ -1,1 +1,14 @@
-Lägg alla sourcefiler (.c) här.
+Alla sourcefiler (.c) som inte ska bygga bibliotek skall ligga här med relevanta headers (.h).
+
+Om någon fil saknas kommer programmet inte kompileras korrekt. Överflödiga .c
+filer kompileras också och ökar programmets storlek. Undvik därför onödiga filer
+i denna mapp.
+
+
+Filer/kataloger som bör finnas i denna mapp:
+
+electrotest.c
+electrotest.h
+src.txt
+
+lib/

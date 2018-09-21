@@ -1,0 +1,22 @@
+Alla sourcefiler (.c) som ska bygga bibliotek skall finnas i denna katalog eller i en underkatalog. Relevanta headers (.h) för biblioteken följer samma regler.
+
+Om någon fil saknas kommer programmet inte kompileras korrekt. Överflödiga .c
+filer kompileras också till bibliotek och ändrar programmets beroenden. Undvik
+därför onödiga filer i denna mapp.
+
+
+Filer/kataloger som bör finnas i denna katalog och dess underkataloger:
+
+lib.txt
+
+component/
+component/component.h
+component/libcomponent.c
+
+power/
+power/libpower.c
+power/libpower.h
+
+resistance/
+resistance/libresistance.c
+resistance/libresistance.h
