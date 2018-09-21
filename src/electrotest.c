@@ -8,7 +8,7 @@
 
 int main(void) {
 
-	//First we create a variable that temorarily stores the users input
+	// First we create a variable that temorarily stores the users input
 	char i[8];
 
 	// Then, we need to get the volt:
@@ -22,9 +22,12 @@ int main(void) {
 	getchar();
 
 	// ... number of components:
-	fprintf(stdout, "Antal komponenter:");
-	fgets (i, sizeof (i), stdin);
-	int count = atoi(i);
+	int count = 0;
+	if (conn == 'S' || conn == 'P') {
+		fprintf(stdout, "Antal komponenter:");
+		fgets (i, sizeof (i), stdin);
+		count = atoi(i);
+	}
 
 	// and finally, the ohm values of each component
 	float array[count];
@@ -32,6 +35,10 @@ int main(void) {
 		fprintf(stdout, "Komponent %d i ohm:", (r+1));
 		fgets (i, sizeof (i), stdin);
 		array[r] = atoi(i);
+		// Abort if user inputs negative value
+		if (atoi(i) < 0) {
+			r = count;
+		}
 	}
 
 
