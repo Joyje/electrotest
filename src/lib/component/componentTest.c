@@ -123,7 +123,7 @@ int calculateTooHighResistance(float *resistors) {
 
 int main(int argc, char *argv[]) {
 
-    float theThreeResistors[3] = {0, 0, 0};
+    float theThreeResistors[LIBCOMPONENT_NUMBER_OF_RESISTORS] = {0, 0, 0};
 
     calculate0Resistance(theThreeResistors);
     calculateMaxResistance(theThreeResistors);

@@ -52,7 +52,7 @@ int main(void) {
 	fprintf(stdout, "Effekt:\n%.2fW\n", watt);
 
         //Calculate E12 resistors
-        float e12Resistors[3] = {0, 0, 0};
+        float e12Resistors[LIBCOMPONENT_NUMBER_OF_RESISTORS] = {0, 0, 0};
         int numberofResistors = e_resistance(ohm, e12Resistors);
 
         if (numberofResistors < 0) {
@@ -61,7 +61,7 @@ int main(void) {
         }
 
         fprintf(stdout, "Ersättningsreistanser i E12-serien kopplade i serie:\n");
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < LIBCOMPONENT_NUMBER_OF_RESISTORS; i++) {
             if (e12Resistors[i] < 10) {
                 fprintf(stdout, "%.1f\n", e12Resistors[i]);
             }

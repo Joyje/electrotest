@@ -12,8 +12,6 @@
 #include <math.h>
 #include <memory.h>
 
-#define NUMBER_OF_RESISTORS 3 // Note! If this is changed you need to also change in calculateBestFit
-
 /**
  * Calculate resistors that can be used in serie to achieve a total resistance
  * @param wantedSum[in] The resistance in ohm that we should achieve
@@ -97,7 +95,7 @@ int checkValidOriginResistance(float orig_resistance,
         return invalidInput; //Too small
     }
 
-    if (orig_resistance > (e12MaxFactorArray[e12UpTo1000ArrayLength-1] * NUMBER_OF_RESISTORS)) {
+    if (orig_resistance > (e12MaxFactorArray[e12UpTo1000ArrayLength-1] * LIBCOMPONENT_NUMBER_OF_RESISTORS)) {
         return invalidInput; //Too large
     }
 
@@ -145,7 +143,7 @@ int e_resistance(float orig_resistance,
     calculateBestFit(orig_resistance, e12MaxFactorArray, e12UpTo1000ArrayLength, res_array);
 
     //If resistor value is 0 no resistor is needed
-    for (int i = 0; i < NUMBER_OF_RESISTORS; i++) {
+    for (int i = 0; i < LIBCOMPONENT_NUMBER_OF_RESISTORS; i++) {
         if (res_array[i] > 0) {
             numberOfUsedResistors++;
         }
