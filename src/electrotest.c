@@ -4,6 +4,7 @@
 #include <ctype.h>
 
 #include "electrotest.h"
+#include "lib/resistance/libresistance.h"
 #include "lib/power/libpower.h"
 #include "lib/component/libcomponent.h"
 
