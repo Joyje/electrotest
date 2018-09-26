@@ -119,8 +119,10 @@ int e_resistance(float orig_resistance,
     int maxE12Factor = 3;
     int validInput = 0;     //Validates if orig_resistance is valid or not
 
-    //First memset res_array to 0 and only change if valid input
-    memset(res_array, 0, sizeof(res_array));
+    //First initialize res_array to 0 and only change if valid input
+    for(int i = 0; i < LIBCOMPONENT_NUMBER_OF_RESISTORS; i++) {
+        res_array[i] = 0;
+    }
 
     //Programme supports e12NormValues, 10*e12NormValues, 100 * e12NormValues. +1 to be able to have 0 in array as well
     int e12UpTo1000ArrayLength = e12NormArrayLength * maxE12Factor + 1;
