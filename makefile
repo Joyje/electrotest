@@ -1,4 +1,5 @@
-# Vi börjar med att definera några basvariabler så som koplitator, namn på vårt program, etc.
+# Vi börjar med att definera några basvariabler så som koplitator, namn på vårt
+# program, etc.
 
 CC = gcc
 CFLAGS = -Wall
@@ -27,12 +28,22 @@ DEPS = $(OBJ:%.o=%.d) # Objektfilerna får dependencyfiler (.d).
 LIB = $(LIBOBJ:$(OBJ_DIR)$(LIB_DIR)%.o=$(LIB_DIR)%.so) # Samma som LIBFILES fast med sökväg.
 
 
-# Nedan specifceras alla argument som kompilatorn behöver för att programmet vi gör skall använda de olika biblioteken vi vill ha med. -L visar vilka kataloger biblioteken ligger i så att kompilatorn kan hitta dem. Samtliga kataloger läggs till med hjälp av en foreach loop. -l flaggan används för att specificera själva biblioteken vi skall använda. Filnamnen anges då utan "lib" och ".so". Flaggan -Wl,-rpath= lägger till specificerade sökvägar till programmets RPATH. Vi lägger till sökvägarna till våra bibliotek till programmets RPATH med en foreach loop. Detta gör programmet körbart även fast biblioteken inte flyttats till någon av linux standard lib kataloger.
+# Nedan specifceras alla argument som kompilatorn behöver för att programmet vi
+# gör skall använda de olika biblioteken vi vill ha med. Flaggan -L visar vilka
+# kataloger biblioteken ligger i så att kompilatorn kan hitta dem. Samtliga
+# kataloger läggs till med hjälp av en foreach loop. -l flaggan används för att
+# specificera själva biblioteken vi skall använda. Filnamnen anges då utan "lib"
+# och ".so". Flaggan -Wl,-rpath= lägger till de specificerade sökvägarna till
+# programmets RPATH. Sökvägarna till våra bibliotek läggs till med en foreach
+# loop, så kompilatorn ser till att de hamnar i programmets RPATH. Detta gör
+# programmet körbart även fast vi inte flyttat biblioteken till någon av linux
+# standard lib kataloger.
 
 LD = $(foreach i,$(dir $(LIB)),-L$(i)) $(LIBFILES:lib%.so=-l%) $(foreach i,$(dir $(LIB)),-Wl,-rpath=$(i)) -lm
 
 
-# Nu när alla variabler har specificerats skriver vi alla operationer som skall utföras och i vilken ordning:
+# Nu när alla variabler har specificerats skriver vi alla operationer som skall
+# utföras och i vilken ordning:
 
 # Gör allt! (standard):
 all:	$(MAIN)
@@ -64,7 +75,8 @@ $(LIBOBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 clean:
 	$(RM) $(SRCOBJ) $(LIBOBJ) $(DEPS) $(OBJ_DIR)
 
-# Kopiera programmet och biblioteken till systemets standardplatser så de hittas av systemets olika *PATH variabler:
+# Kopiera programmet och biblioteken till systemets standardplatser så de hittas
+# av systemets olika *PATH variabler:
 install:
 	cp $(MAIN) /usr/local/bin/ 
 	cp $(LIB) /usr/local/lib/
