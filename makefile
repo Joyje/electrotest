@@ -49,9 +49,21 @@ LD = $(foreach i,$(dir $(LIB)),-L$(i)) $(LIBFILES:lib%.so=-l%) $(foreach i,$(dir
 all:	$(MAIN)
 	@echo '$(MAIN) compiled. Type "sudo make install" to install.' 
 
+# Bygg exekverbara filen som angesi $(MAIN) med de objektfiler och bibliotek
+# som anges i $(SRCOBJ) och  $(LIB)
+# -o flaggan är bygg resultatet.
+# S@ säger att resultatet av kompilatet ska skrivas till den fil som anges
+# längs till vänster på raden ovanför.
 $(MAIN): $(SRCOBJ) $(LIB)
 	$(CC) $(CFLAGS) $(SRCOBJ) -o $@ $(LD)
 
+# Objektfilen byggs och baseras på c filen
+# -MMD Skapar en regel som beskriver vilka beorende källkodsfilen har
+# -c kompilerar källkoden utan att länka
+# $< är källkodsfilen
+# -o flaggan är bygg resultatet
+# S@ säger att resultatet av kompilatet ska skrivas till den fil som anges
+# längs till vänster på raden ovanför
 $(SRCOBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
@@ -59,6 +71,10 @@ $(SRCOBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 # Gör bibliotek:
 lib: $(LIB)
 
+# -shared är att ett dynamiskt bibliotek ska skapas
+# -fPIC Position oberoende kod. Den genererade maskin koden är inte beroende
+# av att finnas på en specifik adress. Detta används för dynamiska bibliotek
+# som flyttas till andra adresser i minnet.
 $(LIB): $(LIB_DIR)%.so: $(OBJ_DIR)$(LIB_DIR)%.o
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -shared -fPIC $< -o $@
@@ -67,7 +83,7 @@ $(LIBOBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -c -fPIC $< -o $@
 
--include $(DEPS) 
+-include $(DEPS)
 
 .PHONY: clean install uninstall
 

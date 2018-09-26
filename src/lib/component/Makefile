@@ -58,9 +58,9 @@ libcomonent.o: libcomponent.c libcomponent.h
 #To generate the o-file make needs to compile the c-files using
 #compiler stated in CC makro. $@ says that the compilation output
 #should be put in filename stated on the left hand of the ":" on
-#row below. The $< is the source file
+#row above. The $< is the source file
 #-c: Compiles source file without linking
-#-o: The build outpu (in this case the libcomponent.so
+#-o: The build output (in this case the libcomponent.so)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(TARGET): $(OBJ)
