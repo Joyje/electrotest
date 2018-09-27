@@ -42,37 +42,42 @@ LIB = $(LIBOBJ:$(OBJ_DIR)$(LIB_DIR)%.o=$(LIB_DIR)%.so) # Samma som LIBFILES fast
 LD = $(foreach i,$(dir $(LIB)),-L$(i)) $(LIBFILES:lib%.so=-l%) $(foreach i,$(dir $(LIB)),-Wl,-rpath=$(i)) -lm
 
 
+
+
 # Nu när alla variabler har specificerats skriver vi alla operationer som skall
 # utföras och i vilken ordning:
+
 
 # Gör allt! (standard):
 all:	$(MAIN)
 	@echo '$(MAIN) compiled. Type "sudo make install" to install.' 
 
-# Bygg exekverbara filen som angesi $(MAIN) med de objektfiler och bibliotek
-# som anges i $(SRCOBJ) och  $(LIB)
-# -o flaggan är bygg resultatet.
-# S@ säger att resultatet av kompilatet ska skrivas till den fil som anges
-# längs till vänster på raden ovanför.
+# Bygg exekverbara filen som anges i $(MAIN) med de objektfiler och bibliotek
+# som anges i $(SRCOBJ) och  $(LIB).
+# -o flaggan specificerar fil för byggresultatet, alltså $@, vilket betyder att
+# resultatet av kompilatet ska skrivas till den fil som anges längs till vänster
+# på raden ovanför, vilket är filen i $(MAIN).
 $(MAIN): $(SRCOBJ) $(LIB)
 	$(CC) $(CFLAGS) $(SRCOBJ) -o $@ $(LD)
 
-# Objektfilen byggs och baseras på c filen
-# -MMD Skapar en regel som beskriver vilka beorende källkodsfilen har
-# -c kompilerar källkoden utan att länka
-# $< är källkodsfilen
-# -o flaggan är bygg resultatet
-# S@ säger att resultatet av kompilatet ska skrivas till den fil som anges
-# längs till vänster på raden ovanför
+# Objektfilerna byggs en efter en och baseras på .c filerna.
+# -MMD Skapar en regel som beskriver vilka beorenden objektfilen har.
+# -c kompilerar källkoden utan att länka.
+# $< är en automatisk variabel som refererar till källkodsfilen som matchar
+# objektfilen.
+# -o flaggan specificerar fil för byggresultatet.
+# $@ säger att resultatet av kompilatet ska skrivas till den fil som anges
+# längs till vänster på raden ovanför.
 $(SRCOBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
+
 # Gör bibliotek:
 lib: $(LIB)
 
-# -shared är att ett dynamiskt bibliotek ska skapas
-# -fPIC Position oberoende kod. Den genererade maskin koden är inte beroende
+# -shared anger att ett dynamiskt bibliotek ska skapas.
+# -fPIC Positionsoberoende kod. Den genererade maskinkoden är inte beroende
 # av att finnas på en specifik adress. Detta används för dynamiska bibliotek
 # som flyttas till andra adresser i minnet.
 $(LIB): $(LIB_DIR)%.so: $(OBJ_DIR)$(LIB_DIR)%.o
@@ -83,6 +88,8 @@ $(LIBOBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -c -fPIC $< -o $@
 
+# Inkludera dependencyfiler (.d) för att objektfilerna ska byggas om ifall någon
+# av .c eller .h filerna som objektfilen är beroende av har modifierats.
 -include $(DEPS)
 
 .PHONY: clean install uninstall
